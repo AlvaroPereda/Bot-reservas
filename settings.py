@@ -24,3 +24,5 @@ RESERVAS = [
 
 URL = "https://app.deskbird.com/planning/calendar"
 HEADLESS = False
+TIMEOUT = 15
+LOGGING_LEVEL = "WARNING"  # DEBUG, INFO, ERROR, CRITICAL
