@@ -18,14 +18,14 @@ class ReservasPage:
         self.wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "calendar-icon-container"))).click()
     
     def select_edificio(self, edificio):
-        self.logging.info(f'Seleccionado edificio {edificio}')
+        self.logging.info(f'Seleccionado edificio: {edificio}')
         self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[data-testid="book--office-selector"]'))).click()
-        self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, f'[aria-posinset="{edificio}"]'))).click()
+        self.wait.until(EC.element_to_be_clickable((By.XPATH, f'//*[contains(text(), "{edificio}")]'))).click()
     
     def select_planta(self, planta):
-        self.logging.info(f'Seleccionado planta {planta}')
+        self.logging.info(f'Seleccionado planta: {planta}')
         self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[data-testid="book--floor-selector"]'))).click()
-        self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, f'[aria-posinset="{planta}"]'))).click()
+        self.wait.until(EC.element_to_be_clickable((By.XPATH, f'//*[contains(text(), "{planta}")]'))).click()
 
     def select_mes(self, mes):
         self.logging.info(f'Ajustando mes a {mes}')
@@ -64,4 +64,4 @@ class ReservasPage:
 
     def confirm_reserva(self):
         self.logging.info("Confirmando reserva")
-        self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[data-testid="book--confirm-button"]'))).click()
+        self.wait.until(EC.element_to_be_clickable((By.XPATH, f'//*[contains(text(), "Quick book")]'))).click()
