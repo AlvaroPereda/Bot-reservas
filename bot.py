@@ -7,6 +7,7 @@ from selenium.webdriver.common.by import By
 import logging
 from datetime import datetime, timedelta
 
+from reservas_page import ReservasPage
 from settings import *
 
 logging.basicConfig(
@@ -54,6 +55,7 @@ def reservar():
         return
     
     hoy = datetime.now()
+    reserva_page = ReservasPage(driver, TIMEOUT, logging)
 
     for reserva in RESERVAS:
         fecha_objetivo = hoy + timedelta(days=reserva.dias_anticipacion)
@@ -64,7 +66,19 @@ def reservar():
         
         mes_nombre = obtener_mes(fecha_objetivo)
 
+        reserva_page.open_panel_reserva()
+        reserva_page.select_edificio(reserva.edificio)
+        reserva_page.select_planta(reserva.planta)
+        reserva_page.open_calendario()
+        reserva_page.select_mes(mes_nombre)
+        reserva_page.select_dia(fecha_objetivo)
+        reserva_page.unselect_dia_completo()
+        reserva_page.select_hora_inicio(reserva.hora_inicio)
+        reserva_page.select_hora_fin(reserva.hora_fin)
+        reserva_page.reload_boton_reservar()
+        reserva_page.confirm_reserva()
+        
 
-    logging.info("Reserva finalizada")
+    logging.info("Reservas finalizadas")
     driver.quit()
 
