@@ -5,6 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 
 import logging
+from datetime import datetime, timedelta
 
 from settings import *
 
@@ -25,7 +26,6 @@ def iniciar_driver():
     logging.info("Iniciando navegador")
     
     try:
-
         driver = webdriver.Chrome(options=options_navegador())
         driver.get(URL)
 
@@ -37,6 +37,12 @@ def iniciar_driver():
     except Exception as e:
         logging.error(f"Error al iniciar el navegador: {e}")
         return None
+    
+def es_finde_semana(fecha):
+    return fecha.weekday() >= 5
+
+def obtener_mes(fecha):
+    return MESES[fecha.month - 1]
 
 def reservar():
     logging.info("Iniciando proceso de reserva")
@@ -47,5 +53,18 @@ def reservar():
         logging.error("No se pudo iniciar el navegador. Abortando proceso de reserva")
         return
     
+    hoy = datetime.now()
+
+    for reserva in RESERVAS:
+        fecha_objetivo = hoy + timedelta(days=reserva.dias_anticipacion)
+
+        if es_finde_semana(fecha_objetivo):
+            logging.info("La fecha objetivo cae en fin de semana. Saltando reserva para esa fecha")
+            continue
+        
+        mes_nombre = obtener_mes(fecha_objetivo)
+
+
     logging.info("Reserva finalizada")
+    driver.quit()
 
