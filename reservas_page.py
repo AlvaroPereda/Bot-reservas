@@ -1,6 +1,7 @@
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+import os
 
 class ReservasPage:
 
@@ -8,6 +9,13 @@ class ReservasPage:
         self.driver = driver
         self.wait = WebDriverWait(driver, timeout)
         self.logging = logging
+
+    def _captura_pantalla(self, nombre):
+        os.makedirs("capturas", exist_ok=True)
+        ruta = os.path.join("capturas", f"{nombre}.png")
+        self.driver.save_screenshot(ruta)
+        self.logging.info(f"Captura de pantalla guardada en {ruta}")
+
 
     def open_panel_reserva(self):
         self.logging.info("Abriendo menu de reservas")
@@ -63,5 +71,9 @@ class ReservasPage:
         self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[data-testid="navigation--book--item"]'))).click()
 
     def confirm_reserva(self):
-        self.logging.info("Confirmando reserva")
-        self.wait.until(EC.element_to_be_clickable((By.XPATH, f'//*[contains(text(), "Quick book")]'))).click()
+        try:
+            self.logging.info("Confirmando reserva")
+            self.wait.until(EC.element_to_be_clickable((By.XPATH, f'//*[contains(text(), "Quick book")]'))).click()
+        except Exception as e:
+            self.logging.error(f'Error al confirmar reseerva: {e}')
+            self._captura_pantalla("error_confirmar_reserva")
