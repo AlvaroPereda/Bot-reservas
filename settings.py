@@ -4,23 +4,23 @@ from dataclasses import dataclass
 class ReservaConfig:
     edificio: str
     planta: str
-    hora_inicio: int
-    hora_fin: int
+    hora_inicio: str
+    hora_fin: str
     dias_anticipacion: int
 
 RESERVAS = [
-    ReservaConfig(
+    ReservaConfig (
         edificio="Parking",
         planta="Sótano 4",
-        hora_inicio=33, # 8:00
-        hora_fin=61, # 15:00
+        hora_inicio="08:00",
+        hora_fin="15:00",
         dias_anticipacion=3
     ),
-    ReservaConfig(
+    ReservaConfig (
         edificio="Edificio C",
         planta="Planta 4",
-        hora_inicio=5, # 8:00
-        hora_fin=33, # 15:00
+        hora_inicio="08:00",
+        hora_fin="15:00",
         dias_anticipacion=7
     )
 ]

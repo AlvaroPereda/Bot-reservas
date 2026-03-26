@@ -79,6 +79,8 @@ def reservar():
                 reserva_page.select_hora_fin(reserva.hora_fin)
                 reserva_page.reload_boton_reservar()
                 reserva_page.confirm_reserva()
+                if reserva_page.get_confirm_reserva():
+                    logging.info(f"Reserva realizada con éxito para el día {fecha_objetivo.strftime('%Y-%m-%d')}")
             except Exception as e:
                 logging.error(f"Error en la reserva del día {fecha_objetivo.strftime('%Y-%m-%d')}: {e}")
             
