@@ -111,15 +111,6 @@ class ReservasPage:
             self._captura_pantalla("unselect_dia_completo_error")
             raise
 
-    def reload_boton_reservar(self):
-        try:
-            self.logging.info("Recargando boton de reservar")
-            self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[data-testid="navigation--book--item"]'))).click()
-        except Exception as e:
-            self.logging.error(f'Error en reload_boton_reservar: {e}')
-            self._captura_pantalla("reload_boton_reservar_error")
-            raise
-
     def confirm_reserva(self):
         try:
             self.logging.info("Confirmando reserva")
