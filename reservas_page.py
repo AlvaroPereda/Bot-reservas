@@ -123,7 +123,19 @@ class ReservasPage:
     def confirm_reserva(self):
         try:
             self.logging.info("Confirmando reserva")
-            self.wait.until(EC.element_to_be_clickable((By.XPATH, '//*[contains(text(), "Quick book")]'))).click()
+            cards = self.wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, '[data-testid="booking-suggestions-card"]')))
+            favourite_card = None
+            for i, card in enumerate(cards):
+                if "Favorite" in card.text:
+                    favourite_card = card
+                    break
+            
+            if not favourite_card:
+                raise Exception("Error al encontrar la carta favorita")
+            
+            quick_book_btn = favourite_card.find_element(By.XPATH, './/*[contains(text(), "Quick book")]')
+            self.wait.until(EC.element_to_be_clickable(quick_book_btn)).click()
+
         except Exception as e:
             self.logging.error(f'Error en confirm_reserva: {e}')
             self._captura_pantalla("confirm_reserva_error")
