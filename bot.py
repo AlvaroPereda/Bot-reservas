@@ -77,7 +77,6 @@ def reservar():
                 reserva_page.unselect_dia_completo()
                 reserva_page.select_hora_inicio(reserva.hora_inicio)
                 reserva_page.select_hora_fin(reserva.hora_fin)
-                reserva_page.reload_boton_reservar()
                 reserva_page.confirm_reserva()
                 if reserva_page.get_confirm_reserva():
                     logging.info(f"Reserva realizada con éxito para el día {fecha_objetivo.strftime('%Y-%m-%d')}")
