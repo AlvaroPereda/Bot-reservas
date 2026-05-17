@@ -30,3 +30,4 @@ HEADLESS = True
 TIMEOUT = 15
 LOGGING_LEVEL = "INFO"  # DEBUG, INFO, ERROR, CRITICAL
 MESES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+HOME = [1, 4] # Dias de telebrajo (0=Lunes, 1=Martes, ..., 4=Viernes)

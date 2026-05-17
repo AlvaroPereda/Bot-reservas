@@ -42,6 +42,9 @@ def iniciar_driver():
 def es_finde_semana(fecha):
     return fecha.weekday() >= 5
 
+def es_dia_teletrabajo(fecha): 
+    return fecha.weekday() in HOME
+
 def obtener_mes(fecha):
     return MESES[fecha.month - 1]
 
@@ -63,6 +66,10 @@ def reservar():
 
             if es_finde_semana(fecha_objetivo):
                 logging.info("La fecha objetivo cae en fin de semana. Saltando reserva para esa fecha")
+                continue
+
+            if es_dia_teletrabajo(fecha_objetivo):
+                logging.info("La fecha objetivo es un día de teletrabajo. Saltando reserva para esa fecha")
                 continue
             
             mes_nombre = obtener_mes(fecha_objetivo)
