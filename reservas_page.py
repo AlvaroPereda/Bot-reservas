@@ -20,7 +20,7 @@ class ReservasPage:
     def open_panel_reserva(self):
         try:
             self.logging.info("Abriendo menu de reservas")
-            self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[data-testid="navigation--book--item"]'))).click()
+            self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[data-testid="navigation-v2--book--item"]'))).click()
         except Exception as e:
             self.logging.error(f'Error en open_panel_reserva: {e}')
             self._captura_pantalla("open_panel_reserva_error")
