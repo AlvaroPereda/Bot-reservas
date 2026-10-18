@@ -26,7 +26,7 @@ class ReservasPage:
     def open_panel_reserva(self):
         try:
             self.logging.info("Abriendo menu de reservas")
-            self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[data-testid="navigation--book--item"]'))).click()
+            self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[data-testid="navigation-v2--book--item"]'))).click()
         except Exception as e:
             self.logging.error(f'Error en open_panel_reserva: {e}')
             self._captura_pantalla("open_panel_reserva_error")
@@ -90,23 +90,19 @@ class ReservasPage:
 
     def select_hora_inicio(self, start):
         try:
-            self.logging.info(f'Seleccionando hora de fin {start}')
-            self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[data-testid="book--time-picker-end"]'))).click()
-            
-            dropdown = self.wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, '[data-pc-section="listcontainer"]')))
-            dropdown.find_element(By.CSS_SELECTOR, f'[aria-label="{start}"]').click()
+            self.logging.info(f'Seleccionando hora de inicio {start}')
+            self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[data-testid="book--time-picker-start"]'))).click()
+            self.wait.until(EC.element_to_be_clickable((By.XPATH, f'//*[contains(text(), "{start}")]'))).click()
         except Exception as e:
-            self.logging.error(f'Error en select_hora_fin: {e}')
-            self._captura_pantalla("select_hora_fin_error")
+            self.logging.error(f'Error en select_hora_inicio: {e}')
+            self._captura_pantalla("select_hora_inicio_error")
             raise
     
     def select_hora_fin(self, end):
         try:
             self.logging.info(f'Seleccionando hora de fin {end}')
             self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[data-testid="book--time-picker-end"]'))).click()
-            
-            dropdown = self.wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, '[data-pc-section="listcontainer"]')))
-            dropdown.find_element(By.CSS_SELECTOR, f'[aria-label="{end}"]').click()
+            self.wait.until(EC.element_to_be_clickable((By.XPATH, f'//*[contains(text(), "{end}")]'))).click()
         except Exception as e:
             self.logging.error(f'Error en select_hora_fin: {e}')
             self._captura_pantalla("select_hora_fin_error")
@@ -127,7 +123,7 @@ class ReservasPage:
             cards = self.wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, '[data-testid="booking-suggestions-card"]')))
             favourite_card = None
             for i, card in enumerate(cards):
-                if "Favorite" in card.text:
+                if "Favourite" in card.text:
                     favourite_card = card
                     break
             
