@@ -1,7 +1,3 @@
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-from selenium.common.exceptions import TimeoutException
 import os
 
 from selenium.common.exceptions import TimeoutException
@@ -18,8 +14,10 @@ class ReservasPage:
         self.logging = logging
 
     def _captura_pantalla(self, nombre):
-        os.makedirs("capturas", exist_ok=True)
-        ruta = os.path.join("capturas", f"{nombre}.png")
+        directorio_script = os.path.dirname(os.path.abspath(__file__))
+        carpeta_capturas = os.path.join(directorio_script, "capturas")
+        os.makedirs(carpeta_capturas, exist_ok=True)
+        ruta = os.path.join(carpeta_capturas, f"{nombre}.png")
         self.driver.save_screenshot(ruta)
         self.logging.info(f"Captura de pantalla guardada en {ruta}")
 
