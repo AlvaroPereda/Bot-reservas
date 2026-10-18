@@ -1,15 +1,16 @@
 import os
 from dataclasses import dataclass
 from datetime import date
+from typing import Final
 
 from dotenv import load_dotenv
 
 load_dotenv()
 
-CHROMIUM_BINARY = os.getenv("CHROMIUM_BINARY", "/usr/bin/chromium")
-CHROMEDRIVER_PATH = os.getenv("CHROMEDRIVER_PATH", "/usr/bin/chromedriver")
-CHROME_USER_DATA_DIR = os.getenv("CHROME_USER_DATA_DIR")
-CHROME_PROFILE = os.getenv("CHROME_PROFILE", "Default")
+CHROMIUM_BINARY: str = os.getenv("CHROMIUM_BINARY", "/usr/bin/chromium")
+CHROMEDRIVER_PATH: str = os.getenv("CHROMEDRIVER_PATH", "/usr/bin/chromedriver")
+CHROME_USER_DATA_DIR: str | None = os.getenv("CHROME_USER_DATA_DIR")
+CHROME_PROFILE: str = os.getenv("CHROME_PROFILE", "Default")
 
 
 @dataclass
@@ -38,11 +39,11 @@ RESERVAS = [
     ),
 ]
 
-URL = "https://app.deskbird.com/planning/calendar"
-HEADLESS = True
-TIMEOUT = 15
-LOGGING_LEVEL = "INFO"  # DEBUG, INFO, ERROR, CRITICAL
-MESES = [
+URL: str = "https://app.deskbird.com/planning/calendar"
+HEADLESS: bool = True
+TIMEOUT: int = 15
+LOGGING_LEVEL: str = "INFO"  # DEBUG, INFO, ERROR, CRITICAL
+MESES: Final = [
     "January",
     "February",
     "March",
@@ -56,8 +57,8 @@ MESES = [
     "November",
     "December",
 ]
-HOME = [1, 4]  # Dias de telebrajo (0=Lunes, 1=Martes, ..., 4=Viernes)
-VACACIONES = [
+HOME: Final = [1, 4]  # Dias de teletrabajo (0=Lunes, 1=Martes, ..., 4=Viernes)
+VACACIONES: Final = [
     # date(2026, 12, 24),
     # date(2026, 12, 25),
 ]  # Dias de vacaciones (se salta la reserva)

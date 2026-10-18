@@ -19,7 +19,7 @@ logging.basicConfig(
 )
 
 
-def options_navegador():
+def options_navegador() -> Options:
     options = Options()
     options.binary_location = CHROMIUM_BINARY
     if CHROME_USER_DATA_DIR:
@@ -36,7 +36,7 @@ def options_navegador():
     return options
 
 
-def iniciar_driver():
+def iniciar_driver() -> webdriver.Chrome | None:
     logger.info("Iniciando navegador")
 
     try:
@@ -51,28 +51,28 @@ def iniciar_driver():
 
         return driver
 
-    except Exception as e:
-        logger.error(f"Error al iniciar el navegador: {e}")
+    except Exception:
+        logger.exception("Error al iniciar el navegador")
         return None
 
 
-def es_finde_semana(fecha):
+def es_finde_semana(fecha: datetime) -> bool:
     return fecha.weekday() >= 5
 
 
-def es_dia_teletrabajo(fecha):
+def es_dia_teletrabajo(fecha: datetime) -> bool:
     return fecha.weekday() in HOME
 
 
-def es_dia_vacaciones(fecha):
+def es_dia_vacaciones(fecha: datetime) -> bool:
     return fecha.date() in VACACIONES
 
 
-def obtener_mes(fecha):
+def obtener_mes(fecha: datetime) -> str:
     return MESES[fecha.month - 1]
 
 
-def reservar():
+def reservar() -> None:
     logger.info("Iniciando proceso de reserva")
 
     driver = iniciar_driver()
@@ -83,27 +83,34 @@ def reservar():
 
     hoy = datetime.now()
     reserva_page = ReservasPage(driver, TIMEOUT, logger)
+    exitosas = 0
+    fallidas = 0
+    saltadas = 0
 
     try:
         for reserva in RESERVAS:
             fecha_objetivo = hoy + timedelta(days=reserva.dias_anticipacion)
+            fstr = fecha_objetivo.strftime("%Y-%m-%d")
 
             if es_dia_vacaciones(fecha_objetivo):
                 logger.info(
-                    "La fecha objetivo es un día de vacaciones. Saltando reserva para esa fecha"
+                    f"La fecha objetivo {fstr} es un día de vacaciones. Saltando reserva para esa fecha"
                 )
+                saltadas += 1
                 continue
 
             if es_finde_semana(fecha_objetivo):
                 logger.info(
-                    "La fecha objetivo cae en fin de semana. Saltando reserva para esa fecha"
+                    f"La fecha objetivo {fstr} cae en fin de semana. Saltando reserva para esa fecha"
                 )
+                saltadas += 1
                 continue
 
             if es_dia_teletrabajo(fecha_objetivo):
                 logger.info(
-                    "La fecha objetivo es un día de teletrabajo. Saltando reserva para esa fecha"
+                    f"La fecha objetivo {fstr} es un día de teletrabajo. Saltando reserva para esa fecha"
                 )
+                saltadas += 1
                 continue
 
             mes_nombre = obtener_mes(fecha_objetivo)
@@ -120,17 +127,26 @@ def reservar():
                 reserva_page.select_hora_fin(reserva.hora_fin)
                 reserva_page.confirm_reserva()
                 if reserva_page.get_confirm_reserva():
-                    logger.info(
-                        f"Reserva realizada con éxito para el día {fecha_objetivo.strftime('%Y-%m-%d')}"
+                    logger.info(f"Reserva realizada con éxito para el día {fstr}")
+                    exitosas += 1
+                else:
+                    logger.warning(
+                        f"La reserva para el día {fstr} no se confirmó correctamente"
                     )
-            except Exception as e:
-                logger.error(
-                    f"Error en la reserva del día {fecha_objetivo.strftime('%Y-%m-%d')}: {e}"
-                )
+                    fallidas += 1
+            except Exception:
+                logger.exception(f"Error en la reserva del día {fstr}")
+                fallidas += 1
 
-        logger.info("Reservas finalizadas")
+        logger.info(
+            f"Reservas finalizadas. Exitosas: {exitosas}, fallidas: {fallidas}, saltadas: {saltadas}"
+        )
 
-    except Exception as e:
-        logger.error(f"Error fatal inesperado: {e}")
+    except Exception:
+        logger.exception("Error fatal inesperado")
     finally:
-        driver.quit()
+        if driver is not None:
+            try:
+                driver.quit()
+            except Exception:
+                logger.warning("Error al cerrar el navegador", exc_info=True)
