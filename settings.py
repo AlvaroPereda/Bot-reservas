@@ -1,5 +1,6 @@
 import os
 from dataclasses import dataclass
+from datetime import date
 
 from dotenv import load_dotenv
 
@@ -56,3 +57,7 @@ MESES = [
     "December",
 ]
 HOME = [1, 4]  # Dias de telebrajo (0=Lunes, 1=Martes, ..., 4=Viernes)
+VACACIONES = [
+    # date(2026, 12, 24),
+    # date(2026, 12, 25),
+]  # Dias de vacaciones (se salta la reserva)

@@ -64,6 +64,10 @@ def es_dia_teletrabajo(fecha):
     return fecha.weekday() in HOME
 
 
+def es_dia_vacaciones(fecha):
+    return fecha.date() in VACACIONES
+
+
 def obtener_mes(fecha):
     return MESES[fecha.month - 1]
 
@@ -83,6 +87,12 @@ def reservar():
     try:
         for reserva in RESERVAS:
             fecha_objetivo = hoy + timedelta(days=reserva.dias_anticipacion)
+
+            if es_dia_vacaciones(fecha_objetivo):
+                logger.info(
+                    "La fecha objetivo es un día de vacaciones. Saltando reserva para esa fecha"
+                )
+                continue
 
             if es_finde_semana(fecha_objetivo):
                 logger.info(
