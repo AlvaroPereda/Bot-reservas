@@ -16,6 +16,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from settings import *
 
+logger = logging.getLogger(__name__)
+
 logging.basicConfig(
     level=getattr(logging, LOGGING_LEVEL),
     format='%(asctime)s - [%(levelname)s] - %(message)s'
@@ -30,7 +32,7 @@ def options_navegador():
     return options
 
 def iniciar_driver():
-    logging.info("Iniciando navegador")
+    logger.info("Iniciando navegador")
     
     try:
         driver = webdriver.Chrome(options=options_navegador())
@@ -42,7 +44,7 @@ def iniciar_driver():
         return driver
     
     except Exception as e:
-        logging.error(f"Error al iniciar el navegador: {e}")
+        logger.error(f"Error al iniciar el navegador: {e}")
         return None
     
 def es_finde_semana(fecha):
@@ -52,16 +54,16 @@ def obtener_mes(fecha):
     return MESES[fecha.month - 1]
 
 def reservar():
-    logging.info("Iniciando proceso de reserva")
+    logger.info("Iniciando proceso de reserva")
     
     driver = iniciar_driver()
 
     if driver is None:
-        logging.error("No se pudo iniciar el navegador. Abortando proceso de reserva")
+        logger.error("No se pudo iniciar el navegador. Abortando proceso de reserva")
         return
     
     hoy = datetime.now()
-    reserva_page = ReservasPage(driver, TIMEOUT, logging)
+    reserva_page = ReservasPage(driver, TIMEOUT, logger)
 
     try:
         for reserva in RESERVAS:
@@ -85,14 +87,14 @@ def reservar():
                 reserva_page.select_hora_fin(reserva.hora_fin)
                 reserva_page.confirm_reserva()
                 if reserva_page.get_confirm_reserva():
-                    logging.info(f"Reserva realizada con éxito para el día {fecha_objetivo.strftime('%Y-%m-%d')}")
+                    logger.info(f"Reserva realizada con éxito para el día {fecha_objetivo.strftime('%Y-%m-%d')}")
             except Exception as e:
-                logging.error(f"Error en la reserva del día {fecha_objetivo.strftime('%Y-%m-%d')}: {e}")
+                logger.error(f"Error en la reserva del día {fecha_objetivo.strftime('%Y-%m-%d')}: {e}")
             
-        logging.info("Reservas finalizadas")
+        logger.info("Reservas finalizadas")
 
     except Exception as e:
-        logging.error(f"Error fatal inesperado: {e}")
+        logger.error(f"Error fatal inesperado: {e}")
     finally:
         driver.quit()
 
