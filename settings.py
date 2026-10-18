@@ -13,15 +13,15 @@ RESERVAS = [
     ReservaConfig (
         edificio="Parking",
         planta="Sótano 4",
-        hora_inicio="08:00",
-        hora_fin="15:00",
+        hora_inicio="07:30",
+        hora_fin="16:00",
         dias_anticipacion=3
     ),
     ReservaConfig (
         edificio="Edificio C",
         planta="Planta 4",
-        hora_inicio="08:00",
-        hora_fin="15:00",
+        hora_inicio="07:30",
+        hora_fin="16:00",
         dias_anticipacion=7
     )
 ]
@@ -31,3 +31,4 @@ HEADLESS = True
 TIMEOUT = 15
 LOGGING_LEVEL = "INFO"  # DEBUG, INFO, ERROR, CRITICAL
 MESES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+HOME = [1, 4] # Dias de telebrajo (0=Lunes, 1=Martes, ..., 4=Viernes)
